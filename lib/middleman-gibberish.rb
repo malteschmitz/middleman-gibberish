@@ -45,11 +45,6 @@ module ::Middleman
       File.join(@app.root, 'source')
     end
 
-# FIXME
-    def javascript_include_tag(*args, &block) 
-      @app.send(:javascript_include_tag, *args, &block) 
-    end
-
     def password(*password)
       unless password.empty?
         @password = password.first.to_s
@@ -123,24 +118,11 @@ module ::Middleman
   # TODO extract this so as to be used from the CLI and tests.
   #
     def script_for(glob, path, encrypted)
-      libs = %w( jquery.js jquery.cookie.js gibberish.js )
-      cdn = 'http://ahoward.github.io/middleman-gibberish/assets/'
+      libs = %w(jquery.js jquery.cookie.js gibberish.js)
 
       scripts =
         libs.map do |lib|
-          script = File.join(source_dir, 'javascripts', lib)
-
-          #if test(?s, script)
-          if false
-            javascript_include_tag(lib)
-          else
-            src = cdn + lib
-
-            log(:warn, "using cdn hosted #{ lib.inspect } @ #{ src.inspect }")
-            log(:warn, "- add source/javascripts/#{ lib } to shut this up - a symlink link will do")
-
-            "<script src='%s' type='text/javascript'></script>" % src
-          end
+          "<script src='/javascripts/#{lib}' type='text/javascript'></script>"
         end
 
       template =
